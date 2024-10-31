@@ -187,6 +187,12 @@ void loop() {
             if (read == 'f') bulb -= 10;
             if (read == 'g') intervalDuration -= 10;
             if (read == 'h') intervalRepeat -= 10;
+            if (read == 'u') bulb += 100;
+            if (read == 'i') intervalDuration += 100;
+            if (read == 'o') intervalRepeat += 100;
+            if (read == 'j') bulb -= 100;
+            if (read == 'k') intervalDuration -= 100;
+            if (read == 'l') intervalRepeat -= 100;
             if (read == '\n') running = true;
             repaint = true;
         }
