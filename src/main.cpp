@@ -7,9 +7,6 @@
 LiquidCrystal_I2C lcd(0x3f, 16, 2);
 
 void setup() {
-    Serial.begin(9600);
-    while (!Serial) continue;
-
     pinMode(out, OUTPUT);
 
     digitalWrite(out, LOW);
@@ -18,6 +15,9 @@ void setup() {
     lcd.backlight();
     lcd.clear();
     lcd.home();
+
+    Serial.begin(9600);
+    while (!Serial) continue;
 }
 
 
