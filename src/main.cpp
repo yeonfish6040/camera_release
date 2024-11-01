@@ -8,6 +8,7 @@ LiquidCrystal_I2C lcd(0x3f, 16, 2);
 
 void setup() {
     Serial.begin(9600);
+    while (!Serial) continue;
 
     pinMode(out, OUTPUT);
 
