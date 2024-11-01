@@ -26,9 +26,9 @@ void setup() {
 // mode 2: bulb interval
 int mode = 0;
 
-unsigned int bulb = 1;
-unsigned int intervalDuration = 30;
-unsigned int intervalRepeat = 3;
+unsigned long bulb = 1;
+unsigned long intervalDuration = 30;
+unsigned long intervalRepeat = 3;
 
 bool repaint = true;
 bool running = false;
@@ -81,7 +81,7 @@ void loop() {
 
             digitalWrite(out, HIGH);
             unsigned long time = millis();
-            while (millis()-time < (bulb*1000)) {
+            while (bulb-(millis()-time)/1000 > 0) {
                 lcd.setCursor(0, 1);
                 lcd.print(bulb-(millis()-time)/1000);
                 lcd.print("s  ");
@@ -102,7 +102,7 @@ void loop() {
             lcd.setCursor(0, 0);
             lcd.print("Running... Interval");
 
-            int repeatTmp = intervalRepeat;
+            unsigned long repeatTmp = intervalRepeat;
             unsigned long time = millis();
             while (repeatTmp != 0) {
                 while ((millis()-time)/(intervalDuration*100) == (intervalRepeat-repeatTmp)) {
@@ -132,7 +132,7 @@ void loop() {
             lcd.setCursor(0, 0);
             lcd.print("Running... both");
 
-            int repeatTmp = intervalRepeat;
+            unsigned long repeatTmp = intervalRepeat;
             unsigned long time = millis();
             while (repeatTmp != 0) {
                 while ((millis()-time)/(intervalDuration*1000) == (intervalRepeat-repeatTmp)) {
@@ -146,7 +146,7 @@ void loop() {
                 }
                 digitalWrite(out, HIGH);
                 unsigned long time2 = millis();
-                while (millis()-time2 < bulb*1000) {
+                while (bulb-(millis()-time)/1000 > 0) {
                     lcd.setCursor(0, 1);
                     lcd.print(bulb-(millis()-time2)/1000);
                     lcd.print("s               ");
