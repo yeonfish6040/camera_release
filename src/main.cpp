@@ -2,14 +2,17 @@
 #include <LiquidCrystal_I2C.h>
 
 #define out DD2
+#define ll long
 #define breakOnEnter if (Serial.read() == '\n') break;
+
+using namespace std;
 
 LiquidCrystal_I2C lcd(0x3f, 16, 2);
 
 void setup() {
     pinMode(out, OUTPUT);
 
-    digitalWrite(out, LOW);
+    digitalWrite(out, HIGH);
 
     lcd.init();
     lcd.backlight();
@@ -26,9 +29,9 @@ void setup() {
 // mode 2: bulb interval
 int mode = 0;
 
-unsigned long bulb = 1;
-unsigned long intervalDuration = 30;
-unsigned long intervalRepeat = 3;
+ll bulb = 1;
+ll intervalDuration = 30;
+ll intervalRepeat = 3;
 
 bool repaint = true;
 bool running = false;
@@ -79,16 +82,16 @@ void loop() {
             lcd.print(bulb);
             lcd.print("s");
 
-            digitalWrite(out, HIGH);
-            unsigned long time = millis();
-            while (bulb-(millis()-time)/1000 > 0) {
+            digitalWrite(out, LOW);
+            ll time = (ll)millis();
+            while (bulb-((ll)millis()-time)/1000 > 0) {
                 lcd.setCursor(0, 1);
-                lcd.print(bulb-(millis()-time)/1000);
+                lcd.print(bulb-((ll)millis()-time)/1000);
                 lcd.print("s  ");
 
                 breakOnEnter
             }
-            digitalWrite(out, LOW);
+            digitalWrite(out, HIGH);
 
             lcd.clear();
             lcd.home();
@@ -102,21 +105,24 @@ void loop() {
             lcd.setCursor(0, 0);
             lcd.print("Running... Interval");
 
-            unsigned long repeatTmp = intervalRepeat;
-            unsigned long time = millis();
+            ll repeatTmp = intervalRepeat;
+            ll time = (ll)millis();
             while (repeatTmp != 0) {
-                while ((millis()-time)/(intervalDuration*100) == (intervalRepeat-repeatTmp)) {
+                while (((ll)millis()-time)/(intervalDuration*100) == (intervalRepeat-repeatTmp)) {
                     lcd.setCursor(0, 1);
-                    lcd.print(((intervalDuration*100)-((millis()-time)%(intervalDuration*100)))/100);
+                    lcd.print(((intervalDuration*100)-(((ll)millis()-time)%(intervalDuration*100)))/100);
                     lcd.print("00ms ");
                     lcd.print(repeatTmp);
                     lcd.print("ea   ");
 
                     breakOnEnter
                 }
-                digitalWrite(out, HIGH);
-                delay(10);
                 digitalWrite(out, LOW);
+                delay(1);
+                digitalWrite(out, HIGH);
+                digitalWrite(out, LOW);
+                delay(10);
+                digitalWrite(out, HIGH);
                 repeatTmp--;
             }
 
@@ -132,28 +138,33 @@ void loop() {
             lcd.setCursor(0, 0);
             lcd.print("Running... both");
 
-            unsigned long repeatTmp = intervalRepeat;
-            unsigned long time = millis();
+            ll repeatTmp = intervalRepeat;
+            ll time = (ll)millis();
             while (repeatTmp != 0) {
-                while ((millis()-time)/(intervalDuration*1000) == (intervalRepeat-repeatTmp)) {
+                while (((ll)millis()-time)/(intervalDuration*1000) == (intervalRepeat-repeatTmp)) {
                     lcd.setCursor(0, 1);
-                    lcd.print(((intervalDuration*1000)-((millis()-time)%(intervalDuration*1000)))/1000);
+                    lcd.print(((intervalDuration*1000)-(((ll)millis()-time)%(intervalDuration*1000)))/1000);
                     lcd.print("s ");
                     lcd.print(repeatTmp);
-                    lcd.print("ea   ");
+                    lcd.print("ea        ");
 
                     breakOnEnter
                 }
+                // wake up
+                digitalWrite(out, LOW);
+                delay(1);
                 digitalWrite(out, HIGH);
-                unsigned long time2 = millis();
-                while (bulb-(millis()-time)/1000 > 0) {
+                digitalWrite(out, LOW);
+                ll time2 = (ll)millis();
+                while (bulb-((ll)millis()-time2)/1000 > 0) {
                     lcd.setCursor(0, 1);
-                    lcd.print(bulb-(millis()-time2)/1000);
+                    lcd.print("bulb ");
+                    lcd.print(bulb-((ll)millis()-time2)/1000);
                     lcd.print("s               ");
 
                     breakOnEnter
                 }
-                digitalWrite(out, LOW);
+                digitalWrite(out, HIGH);
                 repeatTmp--;
             }
 
